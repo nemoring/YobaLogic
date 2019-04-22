@@ -10,7 +10,7 @@ Modified version of original code for **u-blox neo-m8n**.
 
 Requirements:
 * Visual Studio Code
-Plugins:
+* Plugins:
   * PlatformIO plugin
     * Platforms:
       * Platform IO
