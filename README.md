@@ -11,11 +11,10 @@ Modified version of original code for **u-blox neo-m8n**.
 Requirements:
 * Visual Studio Code
 * Plugins:
-  * PlatformIO plugin
+  * PlatformIO
     * Platforms:
-      * Platform IO
-    * Plugins:
       * Espressif 8266
+    * Libraries:
       * ArduinoJson 5.13.4
       * ESP8266 and ESP32 Oled Driver for SSD1306 display 4.0.0
 
