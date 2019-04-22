@@ -1,0 +1,6 @@
+{
+    "terminal.integrated.env.linux": {
+        "PATH": "/home/nemo/.platformio/penv/bin:/home/nemo/.platformio/penv:/home/nemo/.local/bin:/opt/platform-tools:/home/nemo/.local/bin:/opt/platform-tools:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin",
+        "PLATFORMIO_CALLER": "vscode"
+    }
+}
