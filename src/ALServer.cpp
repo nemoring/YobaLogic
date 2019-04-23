@@ -57,16 +57,17 @@ void ALServer::handleResults()
   JsonArray& arrayJ = jsonBuffer.createArray();
 
   for (int i = 0; i < _n; i++) {
-    if (0.0 != _meterings[i].accel30) {
+    if (0.0 != _meterings[i].accel60) {
       JsonObject& object = jsonBuffer.createObject();
-      dtostrf(_meterings[i].accel30, 3, 1, buf30);
-      object["a30"] = (String)buf30;
-
+      
       dtostrf(_meterings[i].accel60, 3, 1, buf60);
       object["a60"] = (String)buf60;
 
       dtostrf(_meterings[i].accel100, 3, 1, buf100);
       object["a100"] = (String)buf100;
+      
+      dtostrf(_meterings[i].accel50_150, 3, 1, buf50_150);
+      object["a50_150"] = (String)buf50_150;
       arrayJ.add(object);
     }
   }
