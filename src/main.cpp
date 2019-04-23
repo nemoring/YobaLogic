@@ -73,9 +73,7 @@ void loop() {
 
     // Время замера
     meteringTime = (float)(ubxMessage.navPvt.iTOW - startITOW) / 1000;   //TODO: в начало
-    if (fullData.gSpeedKm > 50) {
-      metering50_150 = (float)(ubxMessage.navPvt.iTOW - startITOW50_150) / 1000;
-    }
+    metering50_150 = (float)(ubxMessage.navPvt.iTOW - startITOW50_150) / 1000;
 
     // Если это был старт
     if (!start) {
