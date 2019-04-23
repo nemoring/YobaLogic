@@ -113,6 +113,7 @@ void loop() {
       else if (0.0 == metering.accel50_150 && fullData.gSpeedKm >= 50) {
         // Разгон 50-150км/ч
         metering.accel50_150 = metering50_150;
+      }
     }
 
   }
