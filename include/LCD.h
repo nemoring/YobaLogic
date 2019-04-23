@@ -21,7 +21,7 @@ class LCD
 {
   private:
     SSD1306 *display;
-    char buf30[5], buf60[5], buf100[5];
+    char buf30[5], buf60[5], buf100[5], buf50_150[5];
 
   public:
     bool isset;

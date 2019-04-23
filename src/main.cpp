@@ -24,7 +24,7 @@ void setup() {
   serial.begin(115200);
   delay(500);
 
-  metering = {0.0, 0.0, 0.0, 0.0};
+  metering = {0.0, 0.0, 0.0, 0.0, 0.0};
 
   gpsSetup();
   srv.createAP();
@@ -37,10 +37,12 @@ float latitude  = 0.0;           // Ширина
 float longitude = 0.0;           // Долгота
 
 float meteringTime  = 0.0;       // Время замера
+float metering50_150  = 0.0;
 bool onlySpeedMeter = false;     // Режим спидометра
 
 unsigned long startMillis   = 0; // Начало отсчета
 unsigned long startITOW     = 0; // Начало отсчета из GPS
+unsigned long startITOW50_150     = 0;
 unsigned long currentMillis = 0; // Текущее время
 
 bool start        = false;       // Начало замера
@@ -71,7 +73,7 @@ void loop() {
 
     // Время замера
     meteringTime = (float)(ubxMessage.navPvt.iTOW - startITOW) / 1000;   //TODO: в начало
-
+    metering50_150 = (float)(ubxMessage.navPvt.iTOW - startITOW50_150) / 1000;
 
     // Если это был старт
     if (!start) {
@@ -79,7 +81,10 @@ void loop() {
       meteringSave = false;
       startMillis = millis();
       startITOW = ubxMessage.navPvt.iTOW;
-      metering = {0.0, 0.0, 0.0, 0.0};
+      if (fullData.gSpeedKm > 20) {
+        startITOW50_150 = ubxMessage.navPvt.iTOW;
+      }
+      metering = {0.0, 0.0, 0.0, 0.0, 0.0};
       startLat = latitude;
       startLon = longitude;
       finishLat = 0.0;
@@ -92,17 +97,22 @@ void loop() {
 
     // Замеры разгона
     if (!onlySpeedMeter) {
-      if (0.0 == metering.accel30 && fullData.gSpeedKm >= 30) {
+      //if (0.0 == metering.accel30 && fullData.gSpeedKm >= 30) {
         // Разгон до 30км/ч
-        metering.accel30 = meteringTime;
-      }
-      else if (0.0 == metering.accel60 && fullData.gSpeedKm >= 60) {
+        //metering.accel30 = meteringTime;
+      //}
+      //else 
+      if (0.0 == metering.accel60 && fullData.gSpeedKm >= 60) {
         // Разгон до 60км/ч
         metering.accel60 = meteringTime;
       }
       else if (0.0 == metering.accel100 && fullData.gSpeedKm >= 100) {
         // Разгон до 100км/ч
         metering.accel100 = meteringTime;
+      }
+      else if (0.0 == metering.accel50_150 && fullData.gSpeedKm >= 50) {
+        // Разгон 50-150км/ч
+        metering.accel50_150 = metering50_150;
       }
     }
 
@@ -113,6 +123,7 @@ void loop() {
     meteringSave = false;
     startMillis = 0;
     meteringTime = 0;
+    metering50_150 = 0;
     startLat = 0.0;
     startLon = 0.0;
     finishLat = 0.0;
@@ -121,7 +132,7 @@ void loop() {
   // -------------------- END Замер --------------------
 
   // Если замер завершен
-  if (!meteringSave && 0.0 != metering.accel100) {
+  if (!meteringSave && 0.0 != metering.accel100 && 0.0 != metering.accel50_150) {
 
     //------------- последний результат всегда сверху
     Metering *meteringsNew = new Metering[10];
