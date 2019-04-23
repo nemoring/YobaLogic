@@ -81,7 +81,7 @@ void loop() {
       meteringSave = false;
       startMillis = millis();
       startITOW = ubxMessage.navPvt.iTOW;
-      if (fullData.gSpeedKm > 50) {
+      if (fullData.gSpeedKm > 20) {
         startITOW50_150 = ubxMessage.navPvt.iTOW;
       }
       metering = {0.0, 0.0, 0.0, 0.0, 0.0};
@@ -110,7 +110,7 @@ void loop() {
         // Разгон до 100км/ч
         metering.accel100 = meteringTime;
       }
-      else if (0.0 == metering.accel50_150 && fullData.gSpeedKm >= 150) {
+      else if (0.0 == metering.accel50_150 && fullData.gSpeedKm >= 50) {
         // Разгон 50-150км/ч
         metering.accel50_150 = metering50_150;
     }
