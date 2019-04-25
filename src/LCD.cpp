@@ -29,9 +29,9 @@ void LCD::gpsScreen()
 {
   display->clear();
   display->setTextAlignment(TEXT_ALIGN_CENTER);
-  display->setFont(Orbitron_Light_30);
-  display->drawString(64, 6, "GPS");
-  display->drawString(64, 34, "search");
+  display->setFont(ArialMT_Plain_24);
+  display->drawString(64, 6, "Waiting for");
+  display->drawString(64, 34, "GPS...");
   display->display();
 }
 
@@ -71,19 +71,24 @@ void LCD::updateScreen(FullData* fullData, Metering* metering)
   display->drawString(128, 0, fullData->gpsTime);
 
   display->setTextAlignment(TEXT_ALIGN_RIGHT);
-  display->setFont(ArialMT_Plain_16);
+  display->setFont(ArialMT_Plain_10);
   dtostrf(metering->accel30, 3, 1, buf30);
-  display->drawString(122, 10, (String)buf30);
+  display->drawString(128, 12, (String)buf30);
 
   display->setTextAlignment(TEXT_ALIGN_RIGHT);
-  display->setFont(ArialMT_Plain_16);
+  display->setFont(ArialMT_Plain_10);
   dtostrf(metering->accel60, 3, 1, buf60);
-  display->drawString(122, 24, (String)buf60);
+  display->drawString(128, 22, (String)buf60);
 
   display->setTextAlignment(TEXT_ALIGN_RIGHT);
-  display->setFont(ArialMT_Plain_16);
+  display->setFont(ArialMT_Plain_10);
   dtostrf(metering->accel100, 3, 1, buf100);
-  display->drawString(122, 38, (String)buf100);
+  display->drawString(128, 32, (String)buf100);
+
+  display->setTextAlignment(TEXT_ALIGN_RIGHT);
+  display->setFont(ArialMT_Plain_10);
+  dtostrf(metering->accel50_150, 3, 1, buf50_150);
+  display->drawString(128, 42, (String)buf50_150);
 
   //dtostrf(latitude, 8, 6, bufLatitude);
   display->setTextAlignment(TEXT_ALIGN_LEFT);

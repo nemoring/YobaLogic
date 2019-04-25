@@ -152,7 +152,7 @@ boolean compareMsgHeader(const unsigned char* msgHeader) {
 
 
 void gpsSetup() {
-  delay(1000);
+  //delay(1000);
   // send configuration data in UBX protocol
   for (int i = 0; i < sizeof(UBLOX_INIT); i++) {
     serial.write( pgm_read_byte(UBLOX_INIT + i) );

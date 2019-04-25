@@ -67,6 +67,10 @@ void ALServer::handleResults()
 
       dtostrf(_meterings[i].accel100, 3, 1, buf100);
       object["a100"] = (String)buf100;
+
+      dtostrf(_meterings[i].accel50_150, 3, 1, buf50_150);
+      object["a50_150"] = (String)buf50_150;
+
       arrayJ.add(object);
     }
   }
