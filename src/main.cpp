@@ -81,7 +81,7 @@ void loop() {
       meteringSave = false;
       startMillis = millis();
       startITOW = ubxMessage.navPvt.iTOW;
-      metering = {0.0, 0.0, 0.0, 0.0};
+      metering = {0.0, 0.0, 0.0, 0.0, 0.0, 0.0};
       startLat = latitude;
       startLon = longitude;
       finishLat = 0.0;
@@ -118,7 +118,8 @@ void loop() {
 
   }
   // Если была ложная тревога
-  else if (start && 0 == fullData.gSpeedKm) {
+  else if ((start && 0 == fullData.gSpeedKm) ||
+           (0.0 != metering.accel50 && fullData.gSpeedKm < 45)) {
     start = false;
     meteringSave = false;
     startMillis = 0;
