@@ -119,7 +119,7 @@ void loop() {
   }
   // Если была ложная тревога
   else if ((start && 0 == fullData.gSpeedKm) ||
-           (0.0 != metering.accel50 && fullData.gSpeedKm < 45)) {
+           (0.0 != metering.accel50 && fullData.gSpeedKm < 40)) {
     start = false;
     meteringSave = false;
     startMillis = 0;
