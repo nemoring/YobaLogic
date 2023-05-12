@@ -24,11 +24,13 @@ void setup() {
   serial.begin(115200);
   delay(500);
 
-  metering = {0.0, 0.0, 0.0, 0.0};
+  metering = {0.0, 0.0, 0.0, 0.0, 0.0, 0.0};
 
-  gpsSetup();
-  srv.createAP();
   lcd.init();
+  lcd.yobaScreen();
+  srv.createAP();
+  delay(1000);
+  gpsSetup();
 }
 
 unsigned long lastScreenUpdate = 0; // Частота обновления дисплея
@@ -79,7 +81,7 @@ void loop() {
       meteringSave = false;
       startMillis = millis();
       startITOW = ubxMessage.navPvt.iTOW;
-      metering = {0.0, 0.0, 0.0, 0.0};
+      metering = {0.0, 0.0, 0.0, 0.0, 0.0, 0.0};
       startLat = latitude;
       startLon = longitude;
       finishLat = 0.0;
@@ -96,6 +98,10 @@ void loop() {
         // Разгон до 30км/ч
         metering.accel30 = meteringTime;
       }
+      if (0.0 == metering.accel50 && fullData.gSpeedKm >= 50) {
+        // Разгон до 50км/ч
+        metering.accel50 = meteringTime;
+      }
       else if (0.0 == metering.accel60 && fullData.gSpeedKm >= 60) {
         // Разгон до 60км/ч
         metering.accel60 = meteringTime;
@@ -104,11 +110,16 @@ void loop() {
         // Разгон до 100км/ч
         metering.accel100 = meteringTime;
       }
+      else if (0.0 == metering.accel150 && fullData.gSpeedKm >= 150) {
+        // Разгон до 150км/ч
+        metering.accel150 = meteringTime;
+      }
     }
 
   }
   // Если была ложная тревога
-  else if (start && 0 == fullData.gSpeedKm) {
+  else if ((start && 0 == fullData.gSpeedKm) ||
+           (0.0 != metering.accel50 && fullData.gSpeedKm < 45)) {
     start = false;
     meteringSave = false;
     startMillis = 0;
@@ -121,14 +132,17 @@ void loop() {
   // -------------------- END Замер --------------------
 
   // Если замер завершен
-  if (!meteringSave && 0.0 != metering.accel100) {
-
+  if (!meteringSave && ((0.0 != metering.accel150 && fullData.gSpeedKm < 145) ||
+                        (0.0 != metering.accel100 && fullData.gSpeedKm < 95 ) ||
+                        (0.0 != metering.accel60 && fullData.gSpeedKm < 55  ) ||
+                        (0.0 != metering.accel30 && fullData.gSpeedKm < 25  ))) {
+    //----------- считаем разгон 50-150 ----------------
+    metering.accel50_150 = metering.accel150 - metering.accel50;
     //------------- последний результат всегда сверху
     Metering *meteringsNew = new Metering[10];
     memcpy(meteringsNew, meterings, sizeof(meterings[0]) * 10);
     meterings[0] = metering;
-    for (int i = 0; i < 9; i++)
-    {
+    for (int i = 0; i < 9; i++) {
       meterings[i + 1] = meteringsNew[i];
     }
     delete[] meteringsNew;
@@ -141,7 +155,7 @@ void loop() {
   unsigned long now = millis();
   if (now - lastScreenUpdate > 100) {
     if (0 == fullData.numSV) {
-      lcd.yobaScreen();
+      lcd.gpsScreen();
     } else {
       lcd.updateScreen(&fullData, &metering);
     }
@@ -154,4 +168,3 @@ void loop() {
     srv.serverHandle();
   }
 }
-

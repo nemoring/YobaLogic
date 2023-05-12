@@ -10,9 +10,11 @@
 struct Metering
 {
   float accel30;
+  float accel50;
   float accel60;
   float accel100;
-  float quarter;
+  float accel150;
+  float accel50_150;
 };
 
 class ALServer
@@ -20,7 +22,7 @@ class ALServer
   private:
     Metering* _meterings;
     size_t _n;
-    char buf30[5], buf60[5], buf100[5];
+    char buf30[5], buf60[5], buf100[5], buf50_150[5];
 
   public:
     ALServer();
